@@ -47,6 +47,7 @@ ui <- cartridge(
     title = "When did Trump tweet...?",
     uiOutput("tweet_balloon")
   ),
+  uiOutput("score"),
   container_with_title(
     title = "During...",
     uiOutput("ask_answer_ui")
@@ -85,6 +86,7 @@ server <- function(input, output, session) {
   
   ask_mode <- reactiveVal(TRUE)
   answer_was_correct <- reactiveVal(FALSE)
+  score <- reactiveVal(0)
   
   labels <- reactive({
     req(tweet())
@@ -121,6 +123,7 @@ server <- function(input, output, session) {
             (s_tweet$notes %??% NULL) %>>% tags$em
           )
         ),
+        tags$br(),
         button("next_tweet", if (answer_was_correct()) "Do Another!" else "Try Again!")
       )
     }
@@ -151,12 +154,29 @@ server <- function(input, output, session) {
     if (!length(btn_picked)) return(NULL)
     s_label <- s_labels[btn_picked]
     
+    answer_was_correct(FALSE)
     answer_was_correct(s_label == s_tweet$top_category)
     # cat("\npicked:", s_label, "\twas:", s_tweet$top_category)
     
     log_answer(s_label, s_tweet$status_id)
     ask_mode(FALSE)
   }, priority = -1000)
+  
+  observeEvent(answer_was_correct(), {
+    if (answer_was_correct()) score(score() + 1L)
+  })
+  
+  output$score <- renderUI({
+    if (score() >= 10) {
+      tags$h3(
+        tags$span(class = "icon star small"),
+        "You Win!",
+        tags$span(class = "icon star small")
+      )
+    } else if (score() > 0) {
+      tags$h3("Your Score:", score())
+    } 
+  })
 }
 
 shinyApp(ui = ui, server = server)
