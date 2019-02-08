@@ -111,7 +111,7 @@ server <- function(input, output, session) {
           if (answer_was_correct()) nessy::star("medium") else nessy::close("medium")
         ),
         div(
-          style = "padding-left: 5em;",
+          style = "padding-left: 70px;",
           event_types[s_tweet$top_category] %>% tags$h2(),
           s_tweet$created_at %>% strftime("%A %b, %e at %l:%M%P") %>% tags$h3(),
           s_tweet$listed_title %???% tags$h4(s_tweet$listed_title),
