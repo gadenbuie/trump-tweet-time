@@ -22,6 +22,9 @@ N_ANSWER_OPTIONS <- 3L
 
 ui <- cartridge(
   "Trump Tweet Time",
+  tags$style(HTML(
+    "body {max-width: 900px; margin: auto;}"
+  )),
   container_with_title(
     title = "Trump Tweeted...",
     uiOutput("tweet_balloon")
