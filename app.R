@@ -4,7 +4,13 @@ library(nessy)
 library(dplyr)
 library(purrr)
 
-tweets <- readRDS(here::here("data", "djt_joined.rds"))
+tweets <- readRDS(here::here("data", "djt_joined.rds")) %>% 
+  filter(grepl(" ", text)) %>% 
+  group_by(top_category) %>% 
+  mutate(i = row_number()) %>% 
+  filter(i %in% sample(1:n(), min(n(), 50)) | top_category == "Executive Time") %>% 
+  ungroup()
+  
 event_types <- c("Executive Time" = "Executive Time",
                  "Travel" = "Travel",
                  "Unknown" = "Unknown Time at \"Work\"",
@@ -23,10 +29,22 @@ N_ANSWER_OPTIONS <- 3L
 ui <- cartridge(
   "Trump Tweet Time",
   tags$style(HTML(
-    "body {max-width: 900px; margin: auto;}"
+    "body {max-width: 900px; margin: auto;}
+    @media only screen and (max-width:800px) {
+      body {
+        font-size: 10px;
+      }
+      html {
+        font-size: 10px;
+      }
+      h1 {
+        font-size: 19px;
+      }
+    }
+    "
   )),
   container_with_title(
-    title = "Trump Tweeted...",
+    title = "When did Trump tweet...?",
     uiOutput("tweet_balloon")
   ),
   container_with_title(
@@ -45,10 +63,10 @@ ui <- cartridge(
     tags$a(href = "https://twitter.com/grrrck", HTML("&commat;grrrck")),
     "using",
     HTML(paste0(
-      tags$a(href = "https://twitter.com/search?q=%23rstats", "#rstats"), ", ",
+      # tags$a(href = "https://twitter.com/search?q=%23rstats", "#rstats"), ", ",
       tags$a(href = "https://rtweet.info", "rtweet"), ", ", 
       tags$a(href = "https://shiny.rstudio.com", "Shiny"), ", and ",
-      tags$a(href = "https://github.com/ColinFay/nessy", "ColinFay/nessy"), ".")
+      tags$a(href = "https://github.com/ColinFay/nessy", "nessy"), ".")
     )
   )
 )
@@ -59,7 +77,7 @@ server <- function(input, output, session) {
   
   output$tweet_balloon <- renderUI({
     tagList(
-      balloon(HTML(tweet()$text), style = "margin-left: 60px;"),
+      balloon(HTML(tweet()$text), style = "margin-left: 40px;"),
       tags$br(),
       tags$img(src = "trump.png")
     )
