@@ -84,18 +84,27 @@ ui <- cartridge(
   tags$p(
     style = "color: #999;",
     "Based on White House schedules", 
-    tags$a(href = "http://bit.ly/2UGM0fw", "released by Axios.")
+    tags$a(href = "http://bit.ly/2UGM0fw", target = "_blank", "released by Axios.")
   ),
   tags$p(
     style = "color: #999;",
     "App by",
-    tags$a(href = "https://twitter.com/grrrck", HTML("&commat;grrrck")),
+    tags$a(href = "https://twitter.com/grrrck", target = "_blank", HTML("&commat;grrrck")),
     "using",
     HTML(paste0(
       # tags$a(href = "https://twitter.com/search?q=%23rstats", "#rstats"), ", ",
-      tags$a(href = "https://rtweet.info", "rtweet"), ", ", 
-      tags$a(href = "https://shiny.rstudio.com", "Shiny"), ", and ",
-      tags$a(href = "https://github.com/ColinFay/nessy", "nessy"), ".")
+      tags$a(href = "https://rtweet.info", "rtweet", target = "_blank"), ", ", 
+      tags$a(href = "https://shiny.rstudio.com", "Shiny", target = "_blank"), ", and ",
+      tags$a(href = "https://github.com/ColinFay/nessy", target = "_blank", "nessy"), ".")
+    )
+  ),
+  tags$p(
+    tags$a(href = "https://github.com/gadenbuie/trump-tweet-time",
+           style = "color: #555;",
+           target = "_blank",
+           # octocat_animate()
+           tags$img(src = "octocat.gif", style = "height: 35px;"),
+           "View source on GitHub"
     )
   )
 )
