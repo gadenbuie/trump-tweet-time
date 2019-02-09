@@ -144,9 +144,13 @@ server <- function(input, output, session) {
           style = "padding-left: 70px;",
           event_types[s_tweet$top_category] %>% tags$h2(),
           s_tweet$created_at %>% strftime("%A %b, %e at %l:%M%P") %>% tags$h3(),
-          s_tweet$listed_title %???% tags$h4(s_tweet$listed_title),
+          s_tweet$listed_title %???% if (
+            tolower(s_tweet$listed_title) != tolower(s_tweet$top_category)
+          ) tags$h4(s_tweet$listed_title),
+          s_tweet$listed_location %???% tags$h4(s_tweet$listed_location, style = "color: #555;"),
           s_tweet$time_start %???% tags$p(
-            strftime(s_tweet$time_start, "Sched: %b %e from %l:%M%P"), "to", 
+            style = "color: #555;",
+            strftime(s_tweet$time_start, "Sched: %l:%M%P"), "to", 
             strftime(s_tweet$time_end, "%l:%M%P"),
             (s_tweet$notes %??% NULL) %>>% tags$em
           )

@@ -47,7 +47,7 @@ exec_time <-
     ),
     time_inc   = map2(time_start, time_end, seq, by = "5 mins")
   ) %>%
-  select(event_id, time_start, time_end, time_inc, listed_title, top_category, notes)
+  select(event_id, time_start, time_end, time_inc, listed_title, listed_location, top_category, notes)
 
 djt <- readRDS(here::here("data", "djt-tweets-2018-09--2019-02.rds")) %>% 
   distinct(status_id, .keep_all = TRUE)
@@ -92,10 +92,3 @@ djt_joined <-
   )
 
 saveRDS(djt_joined, here::here("data", "djt_joined.rds"))
-  
-votes <- data.frame(status_id = character(), category = character())
-
-library(DBI)
-con <- dbConnect(RSQLite::SQLite(), here::here("data", "djt.db"))
-dbWriteTable(con, "tweets", djt_joined)
-dbWriteTable(con, "votes", votes)
